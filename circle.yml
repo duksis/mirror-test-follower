@@ -1,0 +1,24 @@
+dependencies:
+  pre:
+    - [ ! -d ".mirror" ] && \
+      git clone --bare git@github.com:duksis/mirror-test-origin.git .bare && \
+      cd .bare && \
+      git push --mirror git@github.com:duksis/mirror-test-follower.git
+    - [ ! -d ".mirror" ] && \
+      rm -fr .bare
+    - [ ! -d ".mirror" ] && \
+      git clone --mirror git@github.com:duksis/mirror-test-origin.git .mirror && \
+      cd .mirror && \
+      git remote set-url --push origin git@github.com:duksis/mirror-test-follower
+
+
+  cache_directories:
+    - ".mirror"
+
+checkout:
+  post:
+    - cd .mirror && git fetch -p origin && git push --mirror
+
+test:
+  override:
+    - echo "woop!"

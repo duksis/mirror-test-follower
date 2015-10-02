@@ -7,10 +7,6 @@ dependencies:
   cache_directories:
     - ".mirror"
 
-checkout:
-  post:
-    - cd .mirror && git fetch -p origin && git push --mirror
-
 test:
   override:
-    - echo "woop!"
+    - cd .mirror && git fetch -p origin && git push --mirror

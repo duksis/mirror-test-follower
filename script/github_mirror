@@ -1,0 +1,14 @@
+#!/bin/sh
+if [ ! -d '.mirror' ]; than
+  git clone --bare git@github.com:duksis/mirror-test-origin.git .bare
+  cd .bare
+  git push --mirror git@github.com:duksis/mirror-test-follower.git
+  cd ..
+  rm -fr .bare
+  git clone --mirror git@github.com:duksis/mirror-test-origin.git .mirror
+  cd .mirror
+  git remote set-url --push origin git@github.com:duksis/mirror-test-follower
+  cd ..
+fi
+
+cd .mirror && git fetch -p origin && git push --mirror

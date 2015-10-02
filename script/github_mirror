@@ -1,14 +1,27 @@
 #!/bin/sh
-if [ ! -d '.mirror' ]; then
-  git clone --bare git@github.com:duksis/mirror-test-origin.git .bare
-  cd .bare
-  git push --mirror git@github.com:duksis/mirror-test-follower.git
-  cd ..
-  rm -fr .bare
-  git clone --mirror git@github.com:duksis/mirror-test-origin.git .mirror
-  cd .mirror
-  git remote set-url --push origin git@github.com:duksis/mirror-test-follower
-  cd ..
+if [ ! $# -eq 2 ]
+then
+  echo "Accepts only 2 arguments in form of 'githubuser/reponame'"
+  exit 1
+else
+  __source_repo=${1:?}
+  __target_repo=${2:?}
+  __bare_dir=".bare"
+  __mirror_dir=".mirror"
 fi
 
-cd .mirror && git fetch -p origin && git push --mirror
+if [ ! -d ${__mirror_dir:?} ]
+then
+  git clone --bare "git@github.com:${__source_repo:?}.git" ${__bare_dir:?} && \
+    cd ${__bare_dir:?} && \
+    git push --mirror "git@github.com:${__target_repo:?}.git" && \
+    cd .. && \
+    rm -fr ${__bare_dir:?}
+
+  git clone --mirror "git@github.com:${__source_repo:?}.git" ${__mirror_dir:?} && \
+    cd ${__mirror_dir:?} && \
+    git remote set-url --push origin "git@github.com:${__target_repo:?}" && \
+    cd ..
+fi
+
+cd ${__mirror_dir:?} && git fetch -p origin && git push --mirror

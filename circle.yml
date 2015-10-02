@@ -1,7 +1,10 @@
 dependencies:
+  pre:
+    - ./script/github_mirror 'duksis/mirror-test-origin' 'duksis/mirror-test-follower'
+
   cache_directories:
     - ".mirror"
 
 test:
   override:
-    - ./script/github_mirror
+    - python -m unittest discover -v test

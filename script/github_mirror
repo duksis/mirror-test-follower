@@ -21,11 +21,11 @@ then
   git clone --mirror "git@github.com:${__source_repo:?}.git" ${__mirror_dir:?} && \
     cd ${__mirror_dir:?} && \
     git remote set-url --push origin "git@github.com:${__target_repo:?}" && \
+    git config --unset-all remote.origin.fetch && \
+    git config --add remote.origin.fetch '+refs/heads/*:refs/heads/*' && \
+    git config --add remote.origin.fetch '+refs/tags/*:refs/tags/*' && \
+    rm packed-refs && \
     cd ..
 fi
 
-cd ${__mirror_dir:?} && git config --unset-all remote.origin.fetch && \
-  git config --add remote.origin.fetch '+refs/heads/*:refs/heads/*' && \
-  git config --add remote.origin.fetch '+refs/tags/*:refs/tags/*' && \
-  rm packed-refs && \
-  git fetch -p origin && git push --mirror
+cd ${__mirror_dir:?} && git fetch -p origin && git push --mirror

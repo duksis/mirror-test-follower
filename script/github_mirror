@@ -24,8 +24,8 @@ then
     cd ..
 fi
 
-cd ${__mirror_dir:?} && git config --unset remote.origin.fetch && \
+cd ${__mirror_dir:?} && git config --unset-all remote.origin.fetch && \
   git config --add remote.origin.fetch '+refs/heads/*:refs/heads/*' && \
-  git config --add remote.origin.fetch '+refs/tags/*:refs/tags/*'
-
-cd ${__mirror_dir:?} && git fetch -p origin && git push --mirror
+  git config --add remote.origin.fetch '+refs/tags/*:refs/tags/*' && \
+  rm packed-refs && \
+  git fetch -p origin && git push --mirror
